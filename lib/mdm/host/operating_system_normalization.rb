@@ -382,7 +382,12 @@ module Mdm::Host::OperatingSystemNormalization
 
     # Select the os architecture if available
     if match.has_key?('os.arch') and ! host.attribute_locked?(:arch)
-      host.arch = sanitize(match['os.arch'])
+      tmp_arch = sanitize(match['os.arch'])
+      if self.class::ARCHITECTURES.include?(tmp_arch)
+        host.arch = tmp_arch
+      else
+        host.arch = self.class::UNKNOWN_ARCHITECTURE
+      end
     end
 
     # Guess the purpose using some basic heuristics
